@@ -1,6 +1,9 @@
 package com.ddd.order.command.domain;
 
 import com.ddd.common.MoneyConverter;
+import com.ddd.common.model.Money;
+import com.ddd.order.command.domain.product.Product;
+import com.ddd.order.command.domain.product.ProductId;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Embedded;
@@ -13,7 +16,7 @@ import lombok.NoArgsConstructor;
 public class OrderLine {
 
     @Embedded
-    private Product productId;
+    private ProductId productId;
 
     @Convert(converter = MoneyConverter.class)
     private Money price;
@@ -23,7 +26,7 @@ public class OrderLine {
     @Convert(converter = MoneyConverter.class)
     private Money amounts;
 
-    public OrderLine(Product productId, Money price, int quantity) {
+    public OrderLine(ProductId productId, Money price, int quantity) {
         this.productId = productId;
         this.price = price;
         this.quantity = quantity;

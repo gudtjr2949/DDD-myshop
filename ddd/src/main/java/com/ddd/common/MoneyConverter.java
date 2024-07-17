@@ -1,7 +1,7 @@
 package com.ddd.common;
 
 
-import com.ddd.order.command.domain.Money;
+import com.ddd.common.model.Money;
 import jakarta.persistence.AttributeConverter;
 
 public class MoneyConverter implements AttributeConverter<Money, Integer> {

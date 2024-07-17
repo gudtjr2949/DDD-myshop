@@ -1,4 +1,4 @@
-package com.ddd.order.command.domain;
+package com.ddd.common.model;
 
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;

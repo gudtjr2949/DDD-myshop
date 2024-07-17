@@ -1,6 +1,6 @@
-package com.ddd.order.command.domain;
+package com.ddd.order.command.domain.product;
 
-import jakarta.persistence.Column;
+
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,8 +12,6 @@ import java.io.Serializable;
 @Embeddable
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderId implements Serializable {
-
-    @Column(name = "order_id")
+public class ProductId implements Serializable {
     private String id;
 }

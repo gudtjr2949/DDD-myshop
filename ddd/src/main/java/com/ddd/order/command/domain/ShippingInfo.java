@@ -1,8 +1,11 @@
 package com.ddd.order.command.domain;
 
+import com.ddd.common.model.Address;
 import jakarta.persistence.Embedded;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 
+@Getter
 @AllArgsConstructor
 public class ShippingInfo {
     @Embedded

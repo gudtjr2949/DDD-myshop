@@ -15,8 +15,18 @@ public class OrderRepositoryImpl implements OrderRepository {
     @Override
     public Order findById(String orderId) {
         Order byId = jpaOrderRepository.findById(new OrderId(orderId))
-                .orElseThrow(() -> new IllegalArgumentException("없는 주문 ID 입니다."));
+                .orElseThrow(() -> new IllegalArgumentException("없는 주문입니다. 주문 ID : " + orderId));
 
         return byId;
+    }
+
+    @Override
+    public Order save(Order order) {
+        return jpaOrderRepository.save(order);
+    }
+
+    @Override
+    public void delete(Order order) {
+        jpaOrderRepository.delete(order);
     }
 }

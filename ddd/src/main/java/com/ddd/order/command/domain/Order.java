@@ -1,7 +1,9 @@
 package com.ddd.order.command.domain;
 
 import com.ddd.common.MoneyConverter;
+import com.ddd.common.model.Money;
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
@@ -9,7 +11,9 @@ import java.util.List;
 import static com.ddd.order.command.domain.OrderState.*;
 
 @Entity
+@Getter
 @NoArgsConstructor
+@Table(name = "order")
 public class Order {
 
     @EmbeddedId
@@ -20,8 +24,8 @@ public class Order {
     @Embedded
     private Orderer orderer;
 
-    @ElementCollection(fetch = FetchType.LAZY)
-    private List<OrderLine> orderLines;
+    @Embedded
+    private OrderLines orderLines;
 
     @Embedded
     private ShippingInfo shippingInfo;
@@ -50,8 +54,8 @@ public class Order {
 
     private void setOrderLines(List<OrderLine> orderLines) {
         verifyAtLeastOneOrMoreOrderLines(orderLines);
-        this.orderLines = orderLines;
-        calculateTotalAmounts();
+        this.orderLines = new OrderLines(orderLines);
+        this.totalAmounts = this.orderLines.getTotalAmounts();
     }
 
     private void setShippingInfo(ShippingInfo shippingInfo) {
@@ -59,15 +63,20 @@ public class Order {
         this.shippingInfo = shippingInfo;
     }
 
-    private void calculateTotalAmounts() {
-        int sum = orderLines.stream().mapToInt(o -> o.getAmounts()).sum();
-        this.totalAmounts = new Money(sum);
-    }
+//    private void calculateTotalAmounts() {
+//        int sum = orderLines.getLines().stream().mapToInt(o -> o.getAmounts()).sum();
+//        this.totalAmounts = new Money(sum);
+//    }
 
     private void verifyAtLeastOneOrMoreOrderLines(List<OrderLine> orderLines) {
         if (orderLines == null || orderLines.isEmpty()) {
             throw new IllegalArgumentException("no OrderLine");
         }
+    }
+
+    public void changeOrderLines(List<OrderLine> newLines) {
+        orderLines.changeOrderLines(newLines);
+        this.totalAmounts = orderLines.getTotalAmounts();
     }
 
     /**
