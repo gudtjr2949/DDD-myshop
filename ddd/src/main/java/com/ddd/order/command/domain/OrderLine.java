@@ -7,6 +7,7 @@ import com.ddd.order.command.domain.product.ProductId;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Embedded;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -26,7 +27,8 @@ public class OrderLine {
     @Convert(converter = MoneyConverter.class)
     private Money amounts;
 
-    public OrderLine(ProductId productId, Money price, int quantity) {
+    @Builder
+    private OrderLine(ProductId productId, Money price, int quantity) {
         this.productId = productId;
         this.price = price;
         this.quantity = quantity;

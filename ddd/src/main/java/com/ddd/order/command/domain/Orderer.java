@@ -3,14 +3,13 @@ package com.ddd.order.command.domain;
 import com.ddd.member.command.domain.MemberId;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
+@Builder
 @Embeddable
 @NoArgsConstructor
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class Orderer {
 
     @Column(name = "orderer_id")

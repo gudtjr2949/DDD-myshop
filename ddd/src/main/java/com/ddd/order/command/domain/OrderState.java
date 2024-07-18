@@ -8,20 +8,15 @@ public enum OrderState {
             return true;
         }
 
+        public boolean isOrderLinesChangeable() {
+            return true;
+        }
+
         public boolean isOrderCancelable() {
             return true;
         }
     },
 
-//    PREPARING("제품 준비중") {
-//        public boolean isShippingChangeable() {
-//            return true;
-//        }
-//
-//        public boolean isOrderCancelable() {
-//            return true;
-//        }
-//    },
 
     SHIPPED("출고 처리중"), DELIVERING("배송중"), DELIVERY_COMPLETED("배송 완료"), CANCEL("주문 취소");
 
@@ -33,6 +28,10 @@ public enum OrderState {
 
 
     public boolean isShippingChangeable() {
+        return false;
+    }
+
+    public boolean isOrderLinesChangeable() {
         return false;
     }
 

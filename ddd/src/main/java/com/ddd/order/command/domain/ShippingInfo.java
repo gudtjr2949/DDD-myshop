@@ -2,11 +2,14 @@ package com.ddd.order.command.domain;
 
 import com.ddd.common.model.Address;
 import jakarta.persistence.Embedded;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-@AllArgsConstructor
+@Builder
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class ShippingInfo {
     @Embedded
     private Address address;

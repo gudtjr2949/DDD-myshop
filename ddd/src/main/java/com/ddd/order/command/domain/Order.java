@@ -3,6 +3,7 @@ package com.ddd.order.command.domain;
 import com.ddd.common.MoneyConverter;
 import com.ddd.common.model.Money;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -33,17 +34,18 @@ public class Order {
     @Convert(converter = MoneyConverter.class)
     private Money totalAmounts;
 
-    public Order(OrderId id, Orderer orderer, List<OrderLine> orderLines,
+    @Builder
+    private Order(OrderId id, Orderer orderer, List<OrderLine> orderLines,
                  ShippingInfo shippingInfo, OrderState orderState) {
         setId(id);
         setOrderer(orderer);
         setOrderLines(orderLines);
         setShippingInfo(shippingInfo);
-        this.orderState = orderState;
+        this.orderState = orderState != null ? orderState : PAYMENT_WAITING;
     }
 
     private void setId(OrderId id) {
-        if (id == null) throw new IllegalArgumentException("no id");
+        if (id.getId() == null || id == null) throw new IllegalArgumentException("no id");
         this.id = id;
     }
 
@@ -54,7 +56,7 @@ public class Order {
 
     private void setOrderLines(List<OrderLine> orderLines) {
         verifyAtLeastOneOrMoreOrderLines(orderLines);
-        this.orderLines = new OrderLines(orderLines);
+        this.orderLines = OrderLines.builder().lines(orderLines).build();
         this.totalAmounts = this.orderLines.getTotalAmounts();
     }
 
@@ -63,11 +65,6 @@ public class Order {
         this.shippingInfo = shippingInfo;
     }
 
-//    private void calculateTotalAmounts() {
-//        int sum = orderLines.getLines().stream().mapToInt(o -> o.getAmounts()).sum();
-//        this.totalAmounts = new Money(sum);
-//    }
-
     private void verifyAtLeastOneOrMoreOrderLines(List<OrderLine> orderLines) {
         if (orderLines == null || orderLines.isEmpty()) {
             throw new IllegalArgumentException("no OrderLine");
@@ -75,19 +72,23 @@ public class Order {
     }
 
     public void changeOrderLines(List<OrderLine> newLines) {
+        if (!orderState.isOrderLinesChangeable()) {
+            throw new IllegalStateException(orderState + " 주문 상태로 인한 상품 변경 불가능");
+        }
+
         orderLines.changeOrderLines(newLines);
         this.totalAmounts = orderLines.getTotalAmounts();
     }
 
-    /**
-     * 배송지 변경 메서드
-     * @param newShippingInfo : 변경할 배송지 정보
-     * orderState 가 출고되었거나 배송 준비중이라면 배송지 정보 변경 불가
-     */
     public void changeShippingInfo(ShippingInfo newShippingInfo) {
+        if (newShippingInfo == null) {
+            throw new IllegalArgumentException("no new shipping info");
+        }
+
         if (!orderState.isShippingChangeable()) {
             throw new IllegalStateException(orderState + " 주문 상태로 인한 배송지 변경 불가능");
         }
+
         this.shippingInfo = newShippingInfo;
     }
 
